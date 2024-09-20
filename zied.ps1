@@ -1,40 +1,14 @@
-$iasver = "1.2"
-$activate = 0
-$freeze = 0
-$reset = 0
-
-$PATH = "$env:SystemRoot\System32;$env:SystemRoot\System32\wbem;$env:SystemRoot\System32\WindowsPowerShell\v1.0\"
-if (Test-Path "$env:SystemRoot\Sysnative\reg.exe") {
-    $PATH = "$env:SystemRoot\Sysnative;$env:SystemRoot\Sysnative\wbem;$env:SystemRoot\Sysnative\WindowsPowerShell\v1.0\;$PATH"
+function Test-Admin {
+    $currentUser = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+    return $currentUser.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-$cmdf = $MyInvocation.MyCommand.Path
-$args = $args -join " "
-$elev = $null
-$unattended = 0
-
-if ($args) {
-    $args = $args -replace '"', ''
-    $args.Split(" ") | ForEach-Object {
-        if ($_ -ieq "-el") { $elev = 1 }
-        if ($_ -ieq "/res") { $reset = 1 }
-        if ($_ -ieq "/frz") { $freeze = 1 }
-        if ($_ -ieq "/act") { $activate = 1 }
-    }
+if (-not (Test-Admin)) {
+    Write-Host "Script is not running as administrator. Attempting to restart with elevated privileges..."
+    Start-Process powershell -ArgumentList "-File `"$PSCommandPath`"" -Verb RunAs
+    exit
 }
 
-if ($activate -eq 1 -or $freeze -eq 1 -or $reset -eq 1) { $unattended = 1 }
-
-$Red = "41;97m"
-$Gray = "100;97m"
-$Green = "42;97m"
-$Blue = "44;97m"
-$White = "40;37m"
-$Green = "40;92m"
-$Yellow = "40;93m"
-
-$nceline = "echo: &echo ==== ERROR ==== &echo:"
-$eline = "echo: &call :_color $Red '==== ERROR ====' &echo:"
 $line = "___________________________________________________________________________________________________"
 $buf = '{$W=$Host.UI.RawUI.WindowSize;$B=$Host.UI.RawUI.BufferSize;$W.Height=34;$B.Height=300;$Host.UI.RawUI.WindowSize=$W;$Host.UI.RawUI.BufferSize=$B;}'
 
@@ -86,14 +60,14 @@ if (-not (Get-Item "HKU:\$sid\Software")) {
 }
 
 $HKCUsync = $null
-Remove-Item -Path "HKCU:\IAS_TEST" -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "HKU:\$sid\IAS_TEST" -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "HKCU:\ZIE_TEST" -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "HKU:\$sid\ZIE_TEST" -Force -ErrorAction SilentlyContinue
 
-New-Item -Path "HKCU:\IAS_TEST" -Force
-if (Test-Path "HKU:\$sid\IAS_TEST") { $HKCUsync = 1 }
+New-Item -Path "HKCU:\ZIE_TEST" -Force
+if (Test-Path "HKU:\$sid\ZIE_TEST") { $HKCUsync = 1 }
 
-Remove-Item -Path "HKCU:\IAS_TEST" -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "HKU:\$sid\IAS_TEST" -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "HKCU:\ZIE_TEST" -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "HKU:\$sid\ZIE_TEST" -Force -ErrorAction SilentlyContinue
 
 $arch = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name "PROCESSOR_ARCHITECTURE").PROCESSOR_ARCHITECTURE
 if ($arch -ne "x86") { $arch = "x64" }
@@ -123,7 +97,7 @@ if ($freeze -eq 1) { $frz = 1; goto _activate }
 :MainMenu
 
 cls
-Write-Host "IDM Activation Script $iasver"
+Write-Host "IDM Activation Script $ZIEver"
 Write-Host "1. Activate (Currently not working)"
 Write-Host "2. Freeze Trial"
 Write-Host "3. Reset Activation / Trial"
@@ -252,24 +226,9 @@ if (-not $int) {
     }
 
     if (-not $int) {
-        Write-Host "Unable to connect internetdownloadmanager.com, aborting..."
+        Write-Host "Unable to connect to internetdownloadmanager.com. Please check your internet connection."
         goto done
     }
-    Write-Host "Ping command failed for internetdownloadmanager.com"
 }
 
-$regwinos = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "ProductName").ProductName
-$regarch = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name "PROCESSOR_ARCHITECTURE").PROCESSOR_ARCHITECTURE
-$fullbuild = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "CurrentBuild").CurrentBuild
-$IDMver = (Get-ItemProperty -Path "HKU:\$sid\Software\DownloadManager" -Name "idmvers" -ErrorAction SilentlyContinue).idmvers
-
-Write-Host "Checking Info - [$regwinos | $fullbuild | $regarch | IDM: $IDMver]"
-
-if (Get-Process -Name idman -ErrorAction SilentlyContinue) {
-    Stop-Process -Name idman -Force
-}
-
-Write-Host "Creating backup of CLSID registry keys in $env:SystemRoot\Temp"
-reg export $CLSID "$env:SystemRoot\Temp\_Backup_HKCU_CLSID_$((Get-Date).ToString('yyyyMMdd-HHmmssfff')).reg"
-if ($HKCUsync -ne 1) {
-    reg export $CLSID2 "$
+# Continue with the rest of your script...
