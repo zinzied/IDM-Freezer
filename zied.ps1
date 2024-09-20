@@ -137,7 +137,7 @@ switch ($choice) {
     2 { $frz = 1; goto _activate }
     3 { goto _reset }
     4 { Start-Process "https://www.internetdownloadmanager.com/download.html"; goto MainMenu }
-    5 { Start-Process "https://github.com/zinzied"; goto MainMenu }
+    5 { Start-Process "https://github.com/zinzied/IDM-Freezer/blob/main/zied.cmd"; goto MainMenu }
     0 { exit }
     default { goto MainMenu }
 }
