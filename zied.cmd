@@ -10,7 +10,6 @@
 ::
 ::   Homepages: https://github.com/zinzied
 ::              
-::
 ::       Telegram: @zinzied
 ::
 ::============================================================================
@@ -97,7 +96,7 @@ popd
 
 cls
 color 07
-title  IDM Activation Script %iasver%
+title  IDM Activation Script %ZIED%
 
 set _args=
 set _elev=
@@ -214,7 +213,7 @@ echo:
 echo PowerShell is not working. Aborting...
 echo If you have applied restrictions on Powershell then undo those changes.
 echo:
-echo Check this page for help. %mas%IAS-Help#troubleshoot
+echo Check this page for help. %mas%ZIE-Help#troubleshoot
 goto done2
 )
 
@@ -266,7 +265,7 @@ if defined quedit goto :skipQE
 ::========================================================================================================================================
 
 cls
-title  IDM Activation Script %iasver%
+title  IDM Activation Script %ZIED%
 
 echo:
 echo Initializing...
@@ -279,7 +278,7 @@ echo Initializing...
 echo:
 echo WMI is not working. Aborting...
 echo:
-echo Check this page for help. %mas%IAS-Help#troubleshoot
+echo Check this page for help. %mas%ZIE-Help#troubleshoot
 goto done2
 )
 
@@ -298,7 +297,7 @@ echo:
 echo [%_sid%]
 echo User Account SID not found. Aborting...
 echo:
-echo Check this page for help. %mas%IAS-Help#troubleshoot
+echo Check this page for help. %mas%ZIE-Help#troubleshoot
 goto done2
 )
 
@@ -306,17 +305,17 @@ goto done2
 
 ::  Check if the current user SID is syncing with the HKCU entries
 
-%nul% reg delete HKCU\IAS_TEST /f
-%nul% reg delete HKU\%_sid%\IAS_TEST /f
+%nul% reg delete HKCU\ZIE_TEST /f
+%nul% reg delete HKU\%_sid%\ZIE_TEST /f
 
 set HKCUsync=$null
-%nul% reg add HKCU\IAS_TEST
-%nul% reg query HKU\%_sid%\IAS_TEST && (
+%nul% reg add HKCU\ZIE_TEST
+%nul% reg query HKU\%_sid%\ZIE_TEST && (
 set HKCUsync=1
 )
 
-%nul% reg delete HKCU\IAS_TEST /f
-%nul% reg delete HKU\%_sid%\IAS_TEST /f
+%nul% reg delete HKCU\ZIE_TEST /f
+%nul% reg delete HKU\%_sid%\ZIE_TEST /f
 
 ::  Below code also works for ARM64 Windows 10 (including x64 bit emulation)
 
@@ -345,16 +344,16 @@ set "idmcheck=tasklist /fi "imagename eq idman.exe" | findstr /i "idman.exe" %nu
 
 ::  Check CLSID registry access
 
-%nul% reg add %CLSID2%\IAS_TEST
-%nul% reg query %CLSID2%\IAS_TEST || (
+%nul% reg add %CLSID2%\ZIE_TEST
+%nul% reg query %CLSID2%\ZIE_TEST || (
 %eline%
 echo Failed to write in %CLSID2%
 echo:
-echo Check this page for help. %mas%IAS-Help#troubleshoot
+echo Check this page for help. %mas%ZIE-Help#troubleshoot
 goto done2
 )
 
-%nul% reg delete %CLSID2%\IAS_TEST /f
+%nul% reg delete %CLSID2%\ZIE_TEST /f
 
 ::========================================================================================================================================
 
@@ -365,12 +364,12 @@ if %_freeze%==1 (set frz=1&goto :_activate)
 :MainMenu
 
 cls
-title  IDM Activation Script %iasver%
+title  IDM Activation Script %ZIED%
 if not defined terminal mode 75, 28
 
 echo:
 echo:
-call :_color2 %_White% "             " %_Green% "Create By Piash"
+call :_color2 %_White% "             " %_Green% "Create By ZIED"
 echo:            ___________________________________________________ 
 echo:
 echo:               Telegram: @zinzied
@@ -565,7 +564,7 @@ if not defined _fileexist (
 %eline%
 echo Error: Unable to download files with IDM.
 echo:
-echo Help: %mas%IAS-Help#troubleshoot
+echo Help: %mas%ZIE-Help#troubleshoot
 goto :done
 )
 
