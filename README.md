@@ -12,8 +12,7 @@ A single-file menu-driven tool to activate, freeze, reset, and manage Internet D
 
 | File | Description |
 |------|-------------|
-| [IDM-Freezer-Activation-Tool.exe](https://github.com/zinzied/IDM-Freezer-Activation-Tool/releases/download/IDM-Freezer-Activation-Tool.exe
-) | Standalone executable — no Python or additional files needed |
+| [IDM-Freezer-Activation-Tool.exe](https://github.com/zinzied/IDM-Freezer-Activation-Tool/releases/download/IDM-Freezer-Activation-Tool.exe) | Standalone executable — no Python or additional files needed |
 
 ---
 
